@@ -11,6 +11,8 @@ import org.bukkit.entity.Player
 import org.bukkit.event.Event
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageByEntityEvent
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryDragEvent
@@ -33,16 +35,12 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
 
     override fun onEnable() {
         this.app.start(port)
-        this.server.pluginManager.registerEvents(this, this)
         this.getCommand("overlay")?.setExecutor(this)
+        this.server.pluginManager.registerEvents(this, this)
     }
 
     override fun onDisable() {
-        try {
-            this.app.stop()
-        } catch (error: Error) {
-            // no error handling
-        }
+        this.app.stop()
     }
 
     @EventHandler
@@ -58,13 +56,26 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
-            val host = "${this.hostnames[sender.uniqueId]}:${port}"
+            val me = sender.displayName
+            val ws = "ws://${this.hostnames[sender.uniqueId]}:${port}"
+            val page = "https://chalkpe.github.io/inventory-overlay"
             val text = TextComponent("Click here to open overlay")
-            text.clickEvent = ClickEvent(ClickEvent.Action.OPEN_URL, "http://${host}/index.html")
+            text.clickEvent = ClickEvent(ClickEvent.Action.OPEN_URL, "${page}?me=${me}&ws=${ws}")
 
             sender.spigot().sendMessage(text)
         }
         return true
+    }
+
+    @EventHandler
+    fun onPlayerDamage(event: EntityDamageEvent) {
+        if (event is EntityDamageByEntityEvent) {
+            val attacker = event.damager
+            if (attacker is Player) broadcast(event, attacker)
+        } else {
+            val victim = event.entity
+            if (victim is Player) broadcast(event, victim)
+        }
     }
 
     @EventHandler

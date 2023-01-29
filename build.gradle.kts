@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "pe.chalk.bukkit"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_17
