@@ -5,17 +5,19 @@ plugins {
 }
 
 group = "pe.chalk.bukkit"
-version = "1.0.2"
+version = "1.0.3"
 
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
+    maven("https://jitpack.io")
 }
 
 dependencies {
     compileOnly("org.spigotmc", "spigot-api", "1.19.3-R0.1-SNAPSHOT")
+    compileOnly("com.github.chalkpe", "ChestOverflow", "v2.3.12")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
     implementation("io.javalin", "javalin", "5.3.2")
     implementation("com.fasterxml.jackson.core", "jackson-databind", "2.14.0")
@@ -25,11 +27,11 @@ spigot {
     apiVersion = "1.19"
     description = "Inventory overlay"
     main = "pe.chalk.bukkit.inveitoryoverlay.InventoryOverlay"
+    softDepends = listOf("ChestOverflow")
     commands {
         create("overlay") { description = "Open web link of inventory overlay" }
     }
 }
-
 
 tasks.shadowJar {
     archiveClassifier.set("")

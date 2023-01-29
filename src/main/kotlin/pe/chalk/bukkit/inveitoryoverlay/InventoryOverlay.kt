@@ -4,6 +4,7 @@ import io.javalin.Javalin
 import io.javalin.websocket.WsContext
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.TextComponent
+import org.bstats.bukkit.Metrics
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -22,6 +23,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.Damageable
 import org.bukkit.plugin.java.JavaPlugin
+import pe.chalk.bukkit.chestoverflow.ItemSortEvent
 import java.util.*
 
 class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
@@ -37,6 +39,7 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
         this.app.start(port)
         this.getCommand("overlay")?.setExecutor(this)
         this.server.pluginManager.registerEvents(this, this)
+        Metrics(this, 17573)
     }
 
     override fun onDisable() {
@@ -99,6 +102,11 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
     fun onInventoryDrag(event: InventoryDragEvent) {
         val player = event.whoClicked
         if (player is Player) broadcast(event, player)
+    }
+
+    @EventHandler
+    fun onItemSort(event: ItemSortEvent) {
+        if (event.isPlayerInventory) broadcast(event, event.targetPlayer)
     }
 
     private fun getDamage(item: ItemStack): Int {
