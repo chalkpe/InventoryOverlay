@@ -28,7 +28,7 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
     private var hostnames = mutableMapOf<UUID, String>()
 
     private val app = Javalin.create()
-        .get("/") { it.result("Hello world") }
+        .get("/") { it.result("not here; connect WebSocket to /ws") }
         .ws("/ws") { ws -> ws.onConnect { contexts.add(it) }; ws.onClose { contexts.remove(it) } }
 
     override fun onEnable() {
@@ -38,12 +38,16 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
     }
 
     override fun onDisable() {
-        this.contexts.forEach { it.closeSession() }
-        this.app.stop()
+        try {
+            this.app.stop()
+        } catch (error: Error) {
+            // no error handling
+        }
     }
 
     @EventHandler
     fun onPlayerLogin(event: PlayerLoginEvent) {
+        broadcast(event, event.player)
         this.hostnames[event.player.uniqueId] = event.address.hostName
     }
 
@@ -51,7 +55,6 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
     fun onPlayerLeave(event: PlayerQuitEvent) {
         this.hostnames.remove(event.player.uniqueId)
     }
-
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
