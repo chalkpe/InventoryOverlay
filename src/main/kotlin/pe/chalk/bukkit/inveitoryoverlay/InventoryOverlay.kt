@@ -46,7 +46,7 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
     @EventHandler
     fun onPlayerLogin(event: PlayerLoginEvent) {
         broadcast(event, event.player)
-        this.hostnames[event.player.uniqueId] = event.address.hostName
+        this.hostnames[event.player.uniqueId] = event.realAddress.canonicalHostName
     }
 
     @EventHandler
@@ -57,7 +57,7 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender is Player) {
             val me = sender.displayName
-            val ws = "ws://${this.hostnames[sender.uniqueId]}:${port}"
+            val ws = "wss://${this.hostnames[sender.uniqueId]}:${port}"
             val page = "https://chalkpe.github.io/inventory-overlay"
             val text = TextComponent("Click here to open overlay")
             text.clickEvent = ClickEvent(ClickEvent.Action.OPEN_URL, "${page}?me=${me}&ws=${ws}")
