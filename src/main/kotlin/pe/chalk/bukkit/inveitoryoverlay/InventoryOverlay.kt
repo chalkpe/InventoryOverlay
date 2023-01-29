@@ -90,14 +90,19 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
         if (player is Player) broadcast(event, player)
     }
 
+    private fun getDamage(item: ItemStack): Int {
+        val meta = item.itemMeta
+        return if (meta is Damageable) meta.damage else 0
+    }
+
     private val transformContents = { index: Int, item: ItemStack? ->
         if (item == null) mapOf("slot" to index, "type" to null)
         else mapOf(
             "slot" to index,
             "type" to item.type.key.key,
             "amount" to item.amount,
+            "damage" to getDamage(item),
             "maxDurability" to item.type.maxDurability,
-            "damage" to if (item is Damageable) item.damage else 0
         )
     }
 
