@@ -18,6 +18,7 @@ import org.bukkit.event.entity.EntityPickupItemEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryDragEvent
 import org.bukkit.event.player.PlayerDropItemEvent
+import org.bukkit.event.player.PlayerExpChangeEvent
 import org.bukkit.event.player.PlayerLoginEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.inventory.ItemStack
@@ -89,6 +90,11 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
 
     @EventHandler
     fun onPlayerDropItem(event: PlayerDropItemEvent) {
+        broadcast(event, event.player)
+    }
+
+    @EventHandler
+    fun onPlayerExpChange(event: PlayerExpChangeEvent) {
         broadcast(event, event.player)
     }
 
