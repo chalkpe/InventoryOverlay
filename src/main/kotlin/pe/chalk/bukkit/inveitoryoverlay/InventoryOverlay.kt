@@ -120,10 +120,9 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
         return if (meta is Damageable) meta.damage else 0
     }
 
-    private val transformContents = { index: Int, item: ItemStack? ->
-        if (item == null) mapOf("slot" to index, "type" to null)
+    private val transformContents = { item: ItemStack? ->
+        if (item == null) mapOf("type" to null)
         else mapOf(
-            "slot" to index,
             "type" to item.type.key.key,
             "amount" to item.amount,
             "damage" to getDamage(item),
@@ -138,8 +137,8 @@ class InventoryOverlay: JavaPlugin(), Listener, CommandExecutor {
                 "event" to event.eventName,
                 "version" to description.apiVersion,
                 "player" to player.displayName,
-                "armor" to inventory.armorContents.mapIndexed(transformContents),
-                "storage" to inventory.storageContents.mapIndexed(transformContents)
+                "armor" to inventory.armorContents.map(transformContents),
+                "storage" to inventory.storageContents.map(transformContents)
             )
             contexts.stream().filter { it.session.isOpen }.forEach { it.send(data) }
         })
