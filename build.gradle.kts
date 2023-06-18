@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "pe.chalk.bukkit"
-version = "1.0.4"
+version = "1.0.5"
 
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 java.targetCompatibility = JavaVersion.VERSION_17
@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc", "spigot-api", "1.19.3-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc", "spigot-api", "1.20.1-R0.1-SNAPSHOT")
     compileOnly("com.github.chalkpe", "ChestOverflow", "v2.3.12")
     implementation("org.bstats", "bstats-bukkit", "3.0.0")
     implementation("io.javalin", "javalin", "5.3.2")
@@ -24,7 +24,7 @@ dependencies {
 }
 
 spigot {
-    apiVersion = "1.19"
+    apiVersion = "1.20.1"
     description = "Inventory overlay"
     main = "pe.chalk.bukkit.inveitoryoverlay.InventoryOverlay"
     softDepends = listOf("ChestOverflow")
